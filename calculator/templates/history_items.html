@@ -1,0 +1,18 @@
+{% for calc in calculations %}
+<div class="history-item" data-calc-id="{{ calc._id }}">
+    <div class="calculation-header">
+        <span class="calculation-name">{{ calc.name }}</span>
+        <span class="calculation-time">{{ calc.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+        <button class="delete-btn" onclick="deleteCalculation('{{ calc._id }}')" aria-label="Delete calculation">×</button>
+    </div>
+    <div class="expression">Input: {{ calc.expression }}</div>
+    <div class="result">Result: {{ calc.result }}</div>
+</div>
+{% else %}
+<div class="empty-state">
+    <p class="no-calculations">No calculations yet.</p>
+    <div class="empty-placeholder"></div>
+    <div class="empty-placeholder"></div>
+    <div class="empty-placeholder"></div>
+</div>
+{% endfor %} 

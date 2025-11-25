@@ -1,0 +1,304 @@
+.calculator-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    gap: 2rem;
+}
+
+.calculator {
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 16/9;
+}
+
+.calc-title {
+    color: #333;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.display {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.display input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 2rem;
+    text-align: right;
+    color: #333;
+    outline: none;
+}
+
+.calculation-name-container {
+    margin-bottom: 1rem;
+}
+
+.name-input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#calc-name {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+.save-btn {
+    padding: 0.5rem 1rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.save-btn:hover {
+    background: #45a049;
+}
+
+.buttons {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.control-buttons {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.scientific-buttons {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+}
+
+.trig-buttons {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+
+.number-system {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.main-buttons {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+
+.btn {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+}
+
+.btn.clear {
+    background: rgba(255, 99, 71, 0.9);
+    color: white;
+}
+
+.btn.clear:hover {
+    background: rgba(255, 99, 71, 1);
+}
+
+.btn.op {
+    background: rgba(70, 130, 180, 0.9);
+    color: white;
+}
+
+.btn.op:hover {
+    background: rgba(70, 130, 180, 1);
+}
+
+.btn.sci {
+    background: rgba(147, 112, 219, 0.9);
+    color: white;
+}
+
+.btn.sci:hover {
+    background: rgba(147, 112, 219, 1);
+}
+
+.btn.trig {
+    background: rgba(60, 179, 113, 0.9);
+    color: white;
+}
+
+.btn.trig:hover {
+    background: rgba(60, 179, 113, 1);
+}
+
+.btn.sys {
+    background: rgba(255, 165, 0, 0.9);
+    color: white;
+}
+
+.btn.sys:hover {
+    background: rgba(255, 165, 0, 1);
+}
+
+.double-wide {
+    grid-column: span 2;
+}
+
+.history-section {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    max-height: calc(16/9 * 500px);
+    overflow-y: auto;
+}
+
+.history-section h2 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.calculation-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.calculation-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.calculation-time {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.expression {
+    color: #444;
+    margin-bottom: 0.25rem;
+}
+
+.result {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+.save-status {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.save-status.success {
+    color: #4CAF50;
+}
+
+.save-status.error {
+    color: #f44336;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .calculator-container {
+        flex-direction: column;
+    }
+
+    .calculator {
+        max-width: 100%;
+    }
+
+    .history-section {
+        max-height: 400px;
+    }
+}
+
+.calculator, .history-section, .display, .name-input-group input, .save-btn, .btn, .history-item, .result, .expression, .calculation-header, .calculation-name, .calculation-time, .calc-title, h1, h2, h3, h4, h5, h6, label, p, span, a, input, button, select, option {
+    color: white !important;
+}
+
+.calculator, .history-section, .auth-container, .display, .history-item, .btn, .form-group input, .name-input-group input {
+    background: rgba(20,20,20,0.7) !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.display input, .name-input-group input, input, textarea {
+    color: white !important;
+    background: rgba(0,0,0,0.4) !important;
+}
+
+::placeholder {
+    color: #eee !important;
+    opacity: 1 !important;
+}
+
+body, nav, .calculator, .history-section, .auth-container, .display, .name-input-group input, .save-btn, .flash-message, .form-group input, .btn, .history-item, .result, .expression, .calculation-header, .calculation-name, .calculation-time, .auth-links a, .alert, .calc-title, h1, h2, h3, h4, h5, h6, label, p, span, a, input, button, select, option {
+    font-family: 'Times New Roman', Times, serif !important;
+} 

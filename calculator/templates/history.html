@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+</head>
+</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="history-container">
+    <div class="history-header">
+        <h1>Calculation History</h1>
+        <div class="history-controls">
+            <select id="historySort" onchange="sortHistory()" aria-label="Sort calculations by">
+                <option value="date-desc">Newest First</option>
+                <option value="date-asc">Oldest First</option>
+                <option value="result-desc">Highest Result</option>
+                <option value="result-asc">Lowest Result</option>
+            </select>
+        </div>
+    </div>
+    
+    <div id="historyItems" class="history-items">
+        {% for calc in calculations %}
+        <div class="history-item" data-calc-id="{{ calc._id }}">
+            <div class="calculation-header">
+                <span class="calculation-name">{{ calc.name }}</span>
+                <span class="calculation-time">{{ calc.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                <button class="delete-btn" onclick="deleteCalculation('{{ calc._id }}')" aria-label="Delete calculation">×</button>
+            </div>
+            {% set cleaned_expr = calc.expression | replace('float(', '') | replace('int(', '') | replace('str(', '') | replace(')', '') | replace('√', 'sqrt') %}
+            <div class="expression">Input: {{ cleaned_expr }}</div>
+            <div class="result">Result: {{ calc.result }}</div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p class="no-calculations">No calculations yet.</p>
+            <div class="empty-placeholder"></div>
+            <div class="empty-placeholder"></div>
+            <div class="empty-placeholder"></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+// Function to clean expression before display
+function cleanExpression(expr) {
+    return expr.replace(/float\((\d+(?:\.\d+)?)\)/g, '$1')
+              .replace(/int\((\d+)\)/g, '$1')
+              .replace(/str\(([^)]+)\)/g, '$1')
+              .replace(/\)/g, '')
+              .replace(/√/g, 'sqrt')
+              .trim();
+}
+
+function sortHistory() {
+    const sortBy = document.getElementById('historySort').value;
+    window.location.href = `/history?sort=${sortBy}`;
+}
+
+function deleteCalculation(calcId) {
+    if (!confirm('Are you sure you want to delete this calculation?')) {
+        return;
+    }
+    
+    fetch(`/delete-calculation/${calcId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const calcElement = document.querySelector(`[data-calc-id="${calcId}"]`);
+            if (calcElement) {
+                calcElement.remove();
+            }
+            // If no calculations left, show empty state
+            if (document.querySelectorAll('.history-item').length === 0) {
+                document.getElementById('historyItems').innerHTML = `
+                    <div class="empty-state">
+                        <p class="no-calculations">No calculations yet.</p>
+                        <div class="empty-placeholder"></div>
+                        <div class="empty-placeholder"></div>
+                        <div class="empty-placeholder"></div>
+                    </div>`;
+            }
+        } else {
+            alert('Error deleting calculation: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error deleting calculation');
+    });
+}
+
+// Clean up expressions on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const expressions = document.querySelectorAll('.expression');
+    expressions.forEach(expr => {
+        expr.textContent = cleanExpression(expr.textContent);
+    });
+
+    // Set initial sort value from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sortBy = urlParams.get('sort') || 'date-desc';
+    document.getElementById('historySort').value = sortBy;
+});
+</script>
+
+<style>
+.history-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.history-header h1 {
+    color: white;
+    margin: 0;
+    font-size: 2em;
+    font-weight: 500;
+}
+
+.history-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.history-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+    min-height: 600px; /* Minimum height to maintain consistent size */
+}
+
+.history-item {
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 150px; /* Fixed height for consistency */
+    display: flex;
+    flex-direction: column;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    min-height: 600px;
+}
+
+.empty-placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    height: 150px;
+}
+
+.calculation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.calculation-name {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1em;
+}
+
+.calculation-time {
+    font-size: 0.85em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 99, 71, 0.8);
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 0 5px;
+    transition: color 0.3s ease;
+}
+
+.delete-btn:hover {
+    color: rgba(255, 99, 71, 1);
+}
+
+.expression {
+    font-family: 'Courier New', monospace;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+    word-break: break-all;
+    flex-grow: 1;
+}
+
+.result {
+    font-weight: 500;
+    color: rgba(100, 255, 100, 0.9);
+    font-size: 1.1em;
+    margin-top: auto;
+}
+
+.no-calculations {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.2em;
+}
+
+select {
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+    .history-items {
+        grid-template-columns: 1fr;
+    }
+    
+    .history-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .empty-state {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %} 
